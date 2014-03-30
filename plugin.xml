@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-xmlns:android="http://schemas.android.com/apk/res/android"
-           id="com.jernung.cordova.expansion-file"
-      version="0.0.1">
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        id="com.jernung.cordova.expansion-file"
+        version="0.0.1">
     
     <name>Expansion File</name>
 
     <author>Joshua McFarland</author>
     <description>Cordova Expansion File Plugin</description>
     <keywords>cordova,expansion,file</keywords>
-
+    
+    <js-module src="www/expansion.js" name="expansion">
+        <clobbers target="navigator.expansion" />
+    </js-module>
+    
     <!-- android -->
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="Expansion" >
-                <param name="android-package" value="com.jernung.cordova.expansion-file.Expansion"/>
+                <param name="android-package" value="com.jernung.cordova.expansionfile.Expansion"/>
             </feature>
         </config-file>
         
