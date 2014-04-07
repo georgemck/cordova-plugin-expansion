@@ -31,6 +31,27 @@
         </config-file>
 
         <source-file src="src/android/Expansion.java" target-dir="src/com/jernung/cordova/expansionfile" />
+        
+        <source-file src="src/android/downloader/Constants.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/DownloadProgressInfo.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/DownloaderClientMarshaller.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/DownloaderServiceMarshaller.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/Helpers.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/IDownloaderClient.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/IDownloaderService.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/IStub.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/SystemFacade.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/impl/AndroidHttpClient.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/impl/CustomIntentService.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/impl/CustomNotificationFactory.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/impl/DownloadInfo.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/impl/DownloadNotification.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/impl/DownloadThread.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/impl/DownloaderService.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/impl/DownloadsDB.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/impl/HttpDateTime.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/impl/V14CustomNotification.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        <source-file src="src/android/downloader/impl/V3CustomNotification.java" target-dir="src/com/google/android/vending/expansion/downloader" />
     </platform>
         
 </plugin>
