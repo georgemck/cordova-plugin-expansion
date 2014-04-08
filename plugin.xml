@@ -31,6 +31,11 @@
             <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
         </config-file>
         
+        <config-file target="AndroidManifest.xml" parent="application">
+            <service android:name=".ExpansionDownloaderService" />
+            <receiver android:name=".ExpansionAlarmReceiver" />
+        </config-file>
+        
         <source-file src="src/android/Expansion.java" target-dir="src/com/jernung/cordova/expansionfile" />
         <source-file src="src/android/ExpansionAlarmReceiver.java" target-dir="src/com/jernung/cordova/expansionfile" />
         <source-file src="src/android/ExpansionDownloaderService.java" target-dir="src/com/jernung/cordova/expansionfile" />
