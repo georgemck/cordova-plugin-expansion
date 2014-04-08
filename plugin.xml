@@ -52,6 +52,10 @@
         <source-file src="src/android/downloader/impl/HttpDateTime.java" target-dir="src/com/google/android/vending/expansion/downloader" />
         <source-file src="src/android/downloader/impl/V14CustomNotification.java" target-dir="src/com/google/android/vending/expansion/downloader" />
         <source-file src="src/android/downloader/impl/V3CustomNotification.java" target-dir="src/com/google/android/vending/expansion/downloader" />
+        
+        <source-file src="src/android/zipfile/APEZProvider.java" target-dir="src/com/android/vending/expansion/zipfile" />
+        <source-file src="src/android/zipfile/APKExpansionSupport.java" target-dir="src/com/android/vending/expansion/zipfile" />
+        <source-file src="src/android/zipfile/ZipResourceFile.java" target-dir="src/com/android/vending/expansion/zipfile" />
     </platform>
         
 </plugin>
