@@ -10,7 +10,7 @@
     <description>Cordova Expansion File Plugin</description>
     <keywords>cordova,expansion,file</keywords>
     
-    <js-module src="www/expansion.js" name="expansion">
+    <js-module src="www/expansion.js" name="Expansion">
         <clobbers target="navigator.expansion" />
     </js-module>
     
