@@ -1,17 +1,24 @@
 package com.jernung.cordova.expansionfile;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Vector;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CordovaWebView;
 import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.JSONException;
 
+import com.android.vending.expansion.zipfile.APKExpansionSupport;
+import com.android.vending.expansion.zipfile.ZipResourceFile;
 import android.content.Context;
 import android.os.Environment;
+import android.util.Base64;
+import android.util.Log;
 
 public class Expansion extends CordovaPlugin {
 	private final static String EXPANSION_PATH = "/Android/obb/";
@@ -23,13 +30,26 @@ public class Expansion extends CordovaPlugin {
 	}
 
 	public boolean execute(String action, JSONArray args,
-			CallbackContext callbackContext) {
+			CallbackContext callbackContext) throws JSONException {
 		Context ctx = cordova.getActivity().getApplicationContext();
 		if (action.equals("getFile")) {
+			final String filename = args.getString(0);
+			try {
+				byte[] data = getFile(ctx, filename);
+				if (data == null) {
+					callbackContext.error("File or expansion not found.");
+				} else {
+					String encoded = Base64
+							.encodeToString(data, Base64.DEFAULT);
+					callbackContext.success(encoded);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			return true;
 		}
-		if (action.equals("getPaths")) {
-			String[] results = getAPKExpansionFiles(ctx, MAIN_VERSION,
+		if (action.equals("getExpansionPaths")) {
+			String[] results = getExpansionFiles(ctx, MAIN_VERSION,
 					PATCH_VERSION);
 			if (results != null) {
 				callbackContext.success(results.toString());
@@ -41,7 +61,7 @@ public class Expansion extends CordovaPlugin {
 		return false;
 	}
 
-	static String[] getAPKExpansionFiles(Context ctx, int mainVersion,
+	static String[] getExpansionFiles(Context ctx, int mainVersion,
 			int patchVersion) {
 		String packageName = ctx.getPackageName();
 		Vector<String> ret = new Vector<String>();
@@ -72,5 +92,20 @@ public class Expansion extends CordovaPlugin {
 		String[] retArray = new String[ret.size()];
 		ret.toArray(retArray);
 		return retArray;
+	}
+
+	static byte[] getFile(Context ctx, String filename) throws IOException {
+		ZipResourceFile expansionFile = APKExpansionSupport
+				.getAPKExpansionZipFile(ctx, MAIN_VERSION, PATCH_VERSION);
+		if (expansionFile == null) {
+			Log.e("EXPANSION", "Expansion file not found!");
+			return null;
+		}
+		InputStream file = expansionFile.getInputStream(filename);
+		if (file == null) {
+			Log.e("EXPANSION", "Filename '" + filename + "' not found!");
+			return null;
+		}
+		return IOUtils.toByteArray(file);
 	}
 }
