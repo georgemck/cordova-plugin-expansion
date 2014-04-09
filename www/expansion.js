@@ -7,19 +7,21 @@ module.exports = {
     getFile: function(filename, callback) {
         exec(callback, null, 'Expansion', 'getFile', [filename]);
     },
-    isPlaying: function(callback) {
-        exec(callback, null, 'Expansion', 'isPlaying', []);
-    },
-    pauseMedia: function() {
-        exec(null, null, 'Expansion', 'pauseMedia', []);
-    },
-    setMedia: function(filename, callback) {
-        exec(callback, null, 'Expansion', 'setMedia', [filename]);
-    },
-    startMedia: function() {
-        exec(null, null, 'Expansion', 'startMedia', []);
-    },
-    stopMedia: function() {
-        exec(null, null, 'Expansion', 'stopMedia', []);
+    media: {
+        isPlaying: function(callback) {
+            exec(callback, null, 'Expansion', 'isPlaying', []);
+        },
+        pause: function() {
+            exec(null, null, 'Expansion', 'pauseMedia', []);
+        },
+        set: function(filename, callback) {
+            exec(callback, null, 'Expansion', 'setMedia', [filename]);
+        },
+        start: function() {
+            exec(null, null, 'Expansion', 'startMedia', []);
+        },
+        stop: function() {
+            exec(null, null, 'Expansion', 'stopMedia', []);
+        }
     }
 };
