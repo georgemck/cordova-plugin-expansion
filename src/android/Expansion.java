@@ -57,34 +57,36 @@ public class Expansion extends CordovaPlugin {
 			if (results != null) {
 				callbackContext.success(results.toString());
 			} else {
-				callbackContext.success(0);
+				callbackContext.success();
 			}
 			return true;
 		}
 		if (action.equals("isPlaying")) {
 			callbackContext.success(isPlaying() ? 1 : 0);
+                        return true;
 		}
 		if (action.equals("pauseMedia")) {
 			pauseMedia();
+                        return true;
+		}
+                if (action.equals("playMedia")) {
+			playMedia();
+                        return true;
 		}
 		if (action.equals("setMedia")) {
 			final String filename = args.getString(0);
 			try {
-				if (setMedia(ctx, filename)) {
-					callbackContext.success(1);
-				} else {
-					callbackContext.success(0);
-				}
+				if (setMedia(ctx, filename))
+					callbackContext.success();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+                        return true;
 
-		}
-		if (action.equals("startMedia")) {
-			startMedia();
 		}
 		if (action.equals("stopMedia")) {
 			stopMedia();
+                        return true;
 		}
 		return false;
 	}
@@ -150,6 +152,11 @@ public class Expansion extends CordovaPlugin {
 			media.pause();
 	}
 
+        static void playMedia() {
+		if (media != null && !media.isPlaying())
+			media.start();
+	}
+
 	static boolean setMedia(Context ctx, String filename) throws IOException {
 		ZipResourceFile expansionFile = APKExpansionSupport
 				.getAPKExpansionZipFile(ctx, MAIN_VERSION, PATCH_VERSION);
@@ -168,11 +175,6 @@ public class Expansion extends CordovaPlugin {
 				file.getLength());
 		media.prepare();
 		return true;
-	}
-
-	static void startMedia() {
-		if (media != null && !media.isPlaying())
-			media.start();
 	}
 
 	static void stopMedia() {

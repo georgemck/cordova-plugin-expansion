@@ -14,11 +14,11 @@ module.exports = {
         pause: function() {
             exec(null, null, 'Expansion', 'pauseMedia', []);
         },
+        play: function() {
+            exec(null, null, 'Expansion', 'playMedia', []);
+        },
         set: function(filename, callback) {
             exec(callback, null, 'Expansion', 'setMedia', [filename]);
-        },
-        start: function() {
-            exec(null, null, 'Expansion', 'startMedia', []);
         },
         stop: function() {
             exec(null, null, 'Expansion', 'stopMedia', []);
