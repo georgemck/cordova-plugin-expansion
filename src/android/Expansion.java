@@ -16,6 +16,8 @@ import org.json.JSONException;
 import com.android.vending.expansion.zipfile.APKExpansionSupport;
 import com.android.vending.expansion.zipfile.ZipResourceFile;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.media.MediaPlayer;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
@@ -24,6 +26,7 @@ public class Expansion extends CordovaPlugin {
 	private final static String EXPANSION_PATH = "/Android/obb/";
 	private final static int MAIN_VERSION = 1;
 	private final static int PATCH_VERSION = 1;
+	private static MediaPlayer media;
 
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
@@ -37,7 +40,7 @@ public class Expansion extends CordovaPlugin {
 			try {
 				byte[] data = getFile(ctx, filename);
 				if (data == null) {
-					callbackContext.error("File or expansion not found.");
+					callbackContext.success("File or expansion not found.");
 				} else {
 					String encoded = Base64
 							.encodeToString(data, Base64.DEFAULT);
@@ -54,9 +57,34 @@ public class Expansion extends CordovaPlugin {
 			if (results != null) {
 				callbackContext.success(results.toString());
 			} else {
-				callbackContext.error("Unable to retrieve expansions paths.");
+				callbackContext.success("Unable to retrieve expansions paths.");
 			}
 			return true;
+		}
+		if (action.equals("isPlaying")) {
+			callbackContext.success(isPlaying() ? 1 : 0);
+		}
+		if (action.equals("pauseMedia")) {
+			pauseMedia();
+		}
+		if (action.equals("setMedia")) {
+			final String filename = args.getString(0);
+			try {
+				if (setMedia(ctx, filename)) {
+					callbackContext.success(1);
+				} else {
+					callbackContext.success(0);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+		if (action.equals("startMedia")) {
+			startMedia();
+		}
+		if (action.equals("stopMedia")) {
+			stopMedia();
 		}
 		return false;
 	}
@@ -94,8 +122,7 @@ public class Expansion extends CordovaPlugin {
 		return retArray;
 	}
 
-	static byte[] getFile(Context ctx, String filename)
-			throws IOException {
+	static byte[] getFile(Context ctx, String filename) throws IOException {
 		ZipResourceFile expansionFile = APKExpansionSupport
 				.getAPKExpansionZipFile(ctx, MAIN_VERSION, PATCH_VERSION);
 		if (expansionFile == null) {
@@ -110,5 +137,47 @@ public class Expansion extends CordovaPlugin {
 		byte[] data = IOUtils.toByteArray(file);
 		file.close();
 		return data;
+	}
+
+	static boolean isPlaying() {
+		if (media != null && media.isPlaying())
+			return true;
+		return false;
+	}
+
+	static void pauseMedia() {
+		if (media != null && media.isPlaying())
+			media.pause();
+	}
+
+	static boolean setMedia(Context ctx, String filename) throws IOException {
+		ZipResourceFile expansionFile = APKExpansionSupport
+				.getAPKExpansionZipFile(ctx, MAIN_VERSION, PATCH_VERSION);
+		if (expansionFile == null) {
+			Log.e("EXPANSION", "Expansion file not found!");
+			return false;
+		}
+		AssetFileDescriptor file = expansionFile
+				.getAssetFileDescriptor(filename);
+		if (file == null) {
+			Log.e("EXPANSION", "Filename '" + filename + "' not found!");
+			return false;
+		}
+		media = new MediaPlayer();
+		media.setDataSource(file.getFileDescriptor(), file.getStartOffset(),
+				file.getLength());
+		media.prepare();
+		media.start();
+		return true;
+	}
+
+	static void startMedia() {
+		if (media != null && !media.isPlaying())
+			media.start();
+	}
+
+	static void stopMedia() {
+		if (media != null && media.isPlaying())
+			media.stop();
 	}
 }
