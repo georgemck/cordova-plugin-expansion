@@ -40,7 +40,7 @@ public class Expansion extends CordovaPlugin {
 			try {
 				byte[] data = getFile(ctx, filename);
 				if (data == null) {
-					callbackContext.success("File or expansion not found.");
+					callbackContext.success(0);
 				} else {
 					String encoded = Base64
 							.encodeToString(data, Base64.DEFAULT);
@@ -57,7 +57,7 @@ public class Expansion extends CordovaPlugin {
 			if (results != null) {
 				callbackContext.success(results.toString());
 			} else {
-				callbackContext.success("Unable to retrieve expansions paths.");
+				callbackContext.success(0);
 			}
 			return true;
 		}
@@ -167,7 +167,6 @@ public class Expansion extends CordovaPlugin {
 		media.setDataSource(file.getFileDescriptor(), file.getStartOffset(),
 				file.getLength());
 		media.prepare();
-		media.start();
 		return true;
 	}
 
