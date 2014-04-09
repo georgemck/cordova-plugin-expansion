@@ -94,7 +94,8 @@ public class Expansion extends CordovaPlugin {
 		return retArray;
 	}
 
-	static byte[] getFile(Context ctx, String filename) throws IOException {
+	static byte[] getFile(Context ctx, String filename)
+			throws IOException {
 		ZipResourceFile expansionFile = APKExpansionSupport
 				.getAPKExpansionZipFile(ctx, MAIN_VERSION, PATCH_VERSION);
 		if (expansionFile == null) {
@@ -106,6 +107,8 @@ public class Expansion extends CordovaPlugin {
 			Log.e("EXPANSION", "Filename '" + filename + "' not found!");
 			return null;
 		}
-		return IOUtils.toByteArray(file);
+		byte[] data = IOUtils.toByteArray(file);
+		file.close();
+		return data;
 	}
 }
