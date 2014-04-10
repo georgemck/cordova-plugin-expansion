@@ -160,6 +160,10 @@ public class Expansion extends CordovaPlugin {
 	static boolean setMedia(Context ctx, String filename) throws IOException {
 		ZipResourceFile expansionFile = APKExpansionSupport
 				.getAPKExpansionZipFile(ctx, MAIN_VERSION, PATCH_VERSION);
+                if (media != null && media.isPlaying()) {
+                        Log.e("EXPANSION", "Media is currently playing!");
+                        return false;
+                }
 		if (expansionFile == null) {
 			Log.e("EXPANSION", "Expansion file not found!");
 			return false;
