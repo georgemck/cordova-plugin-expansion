@@ -18,11 +18,12 @@ import com.android.vending.expansion.zipfile.ZipResourceFile;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 
-public class Expansion extends CordovaPlugin {
+public class Expansion extends CordovaPlugin implements OnPreparedListener {
 	private final static String EXPANSION_PATH = "/Android/obb/";
 	private final static int MAIN_VERSION = 1;
 	private final static int PATCH_VERSION = 1;
@@ -63,30 +64,24 @@ public class Expansion extends CordovaPlugin {
 		}
 		if (action.equals("isPlaying")) {
 			callbackContext.success(isPlaying() ? 1 : 0);
-                        return true;
+			return true;
 		}
 		if (action.equals("pauseMedia")) {
 			pauseMedia();
-                        return true;
+			return true;
 		}
-                if (action.equals("playMedia")) {
-			playMedia();
-                        return true;
-		}
-		if (action.equals("setMedia")) {
+		if (action.equals("playMedia")) {
 			final String filename = args.getString(0);
 			try {
-				if (setMedia(ctx, filename))
-					callbackContext.success();
+				playMedia(ctx, filename);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-                        return true;
-
+			return true;
 		}
 		if (action.equals("stopMedia")) {
 			stopMedia();
-                        return true;
+			return true;
 		}
 		return false;
 	}
@@ -147,42 +142,40 @@ public class Expansion extends CordovaPlugin {
 		return false;
 	}
 
+	@Override
+	public void onPrepared(MediaPlayer media) {
+		media.start();
+	}
+
 	static void pauseMedia() {
 		if (media != null && media.isPlaying())
 			media.pause();
 	}
 
-        static void playMedia() {
-		if (media != null && !media.isPlaying())
-			media.start();
-	}
-
-	static boolean setMedia(Context ctx, String filename) throws IOException {
+	private void playMedia(Context ctx, String filename) throws IOException {
 		ZipResourceFile expansionFile = APKExpansionSupport
 				.getAPKExpansionZipFile(ctx, MAIN_VERSION, PATCH_VERSION);
-                if (media != null && media.isPlaying()) {
-                        Log.e("EXPANSION", "Media is currently playing!");
-                        return false;
-                }
+		if (media != null && media.isPlaying()) {
+			Log.e("EXPANSION", "Media is currently playing!");
+		}
 		if (expansionFile == null) {
 			Log.e("EXPANSION", "Expansion file not found!");
-			return false;
 		}
 		AssetFileDescriptor file = expansionFile
 				.getAssetFileDescriptor(filename);
 		if (file == null) {
 			Log.e("EXPANSION", "Filename '" + filename + "' not found!");
-			return false;
 		}
 		media = new MediaPlayer();
 		media.setDataSource(file.getFileDescriptor(), file.getStartOffset(),
 				file.getLength());
-		media.prepare();
-		return true;
+		media.setOnPreparedListener(this);
+		media.prepareAsync();
 	}
 
 	static void stopMedia() {
 		if (media != null && media.isPlaying())
 			media.stop();
 	}
+
 }

@@ -14,11 +14,8 @@ module.exports = {
         pause: function() {
             exec(null, null, 'Expansion', 'pauseMedia', []);
         },
-        play: function() {
-            exec(null, null, 'Expansion', 'playMedia', []);
-        },
-        set: function(filename, callback) {
-            exec(callback, null, 'Expansion', 'setMedia', [filename]);
+        play: function(filename) {
+            exec(null, null, 'Expansion', 'playMedia', [filename]);
         },
         stop: function() {
             exec(null, null, 'Expansion', 'stopMedia', []);
