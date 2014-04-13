@@ -28,9 +28,16 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 	private final static int MAIN_VERSION = 1;
 	private final static int PATCH_VERSION = 1;
 	private static MediaPlayer media;
+	private static ZipResourceFile expansionFile;
 
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
+		try {
+			expansionFile = APKExpansionSupport
+					.getAPKExpansionZipFile(cordova.getActivity().getApplicationContext(), MAIN_VERSION, PATCH_VERSION);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public boolean execute(String action, JSONArray args,
@@ -39,7 +46,7 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 		if (action.equals("getFile")) {
 			final String filename = args.getString(0);
 			try {
-				byte[] data = getFile(ctx, filename);
+				byte[] data = getFile(filename);
 				if (data == null) {
 					callbackContext.success(0);
 				} else {
@@ -73,7 +80,7 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 		if (action.equals("playMedia")) {
 			final String filename = args.getString(0);
 			try {
-				playMedia(ctx, filename);
+				playMedia(filename);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -119,9 +126,7 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 		return retArray;
 	}
 
-	static byte[] getFile(Context ctx, String filename) throws IOException {
-		ZipResourceFile expansionFile = APKExpansionSupport
-				.getAPKExpansionZipFile(ctx, MAIN_VERSION, PATCH_VERSION);
+	static byte[] getFile(String filename) throws IOException {
 		if (expansionFile == null) {
 			Log.e("EXPANSION", "Expansion file not found!");
 			return null;
@@ -152,9 +157,7 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 			media.pause();
 	}
 
-	private void playMedia(Context ctx, String filename) throws IOException {
-		ZipResourceFile expansionFile = APKExpansionSupport
-				.getAPKExpansionZipFile(ctx, MAIN_VERSION, PATCH_VERSION);
+	private void playMedia(String filename) throws IOException {
 		if (media != null && media.isPlaying()) {
 			Log.e("EXPANSION", "Media is currently playing!");
 		}
