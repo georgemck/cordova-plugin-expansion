@@ -25,8 +25,8 @@ import android.util.Log;
 
 public class Expansion extends CordovaPlugin implements OnPreparedListener {
 	private final static String EXPANSION_PATH = "/Android/obb/";
-	private final static int MAIN_VERSION = 1;
-	private final static int PATCH_VERSION = 1;
+	private final static int MAIN_VERSION = 3;
+	private final static int PATCH_VERSION = 3;
 	private static MediaPlayer media;
 	private static ZipResourceFile expansionFile;
 
