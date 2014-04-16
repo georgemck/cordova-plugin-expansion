@@ -33,7 +33,7 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
 	}
-	
+
 	public boolean execute(String action, JSONArray args,
 			CallbackContext callbackContext) throws JSONException {
 		Context ctx = cordova.getActivity().getApplicationContext();
@@ -41,9 +41,14 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 			MAIN_VERSION = Integer.parseInt(args.getString(0));
 			PATCH_VERSION = Integer.parseInt(args.getString(1));
 			try {
-				expansionFile = APKExpansionSupport
-						.getAPKExpansionZipFile(cordova.getActivity().getApplicationContext(), MAIN_VERSION, PATCH_VERSION);
-				Log.i("EXPANSION", expansionFile.toString());
+				expansionFile = APKExpansionSupport.getAPKExpansionZipFile(
+						cordova.getActivity().getApplicationContext(),
+						MAIN_VERSION, PATCH_VERSION);
+				if (expansionFile == null) {
+					callbackContext.success(0);
+				} else {
+					callbackContext.success(1);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -65,8 +70,7 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 			return true;
 		}
 		if (action.equals("getPaths")) {
-			String[] results = getPaths(ctx, MAIN_VERSION,
-					PATCH_VERSION);
+			String[] results = getPaths(ctx, MAIN_VERSION, PATCH_VERSION);
 			if (results != null) {
 				callbackContext.success(results.toString());
 			} else {
@@ -97,9 +101,8 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 		}
 		return false;
 	}
-	
-	static String[] getPaths(Context ctx, int mainVersion,
-			int patchVersion) {
+
+	static String[] getPaths(Context ctx, int mainVersion, int patchVersion) {
 		String packageName = ctx.getPackageName();
 		Vector<String> ret = new Vector<String>();
 		if (Environment.getExternalStorageState().equals(
@@ -145,7 +148,7 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 		file.close();
 		return data;
 	}
-	
+
 	static boolean isPlaying() {
 		if (media != null && media.isPlaying())
 			return true;
