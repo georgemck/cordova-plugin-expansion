@@ -25,34 +25,25 @@ import android.util.Log;
 
 public class Expansion extends CordovaPlugin implements OnPreparedListener {
 	private final static String EXPANSION_PATH = "/Android/obb/";
-	private static int MAIN_VERSION = 1;
-	private static int PATCH_VERSION = 1;
+	private static int MAIN_VERSION = 3;
+	private static int PATCH_VERSION = 3;
 	private static MediaPlayer media;
 	private static ZipResourceFile expansionFile;
 
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
+		try {
+			expansionFile = APKExpansionSupport.getAPKExpansionZipFile(cordova
+					.getActivity().getApplicationContext(), MAIN_VERSION,
+					PATCH_VERSION);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public boolean execute(String action, JSONArray args,
 			CallbackContext callbackContext) throws JSONException {
 		Context ctx = cordova.getActivity().getApplicationContext();
-		if (action.equals("load")) {
-			MAIN_VERSION = Integer.parseInt(args.getString(0));
-			PATCH_VERSION = Integer.parseInt(args.getString(1));
-			try {
-				expansionFile = APKExpansionSupport.getAPKExpansionZipFile(
-						cordova.getActivity().getApplicationContext(),
-						MAIN_VERSION, PATCH_VERSION);
-				if (expansionFile == null) {
-					callbackContext.success(0);
-				} else {
-					callbackContext.success(1);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 		if (action.equals("getFile")) {
 			final String filename = args.getString(0);
 			try {
