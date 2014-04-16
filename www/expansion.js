@@ -20,5 +20,14 @@ module.exports = {
         stop: function() {
             exec(null, null, 'Expansion', 'stopMedia', []);
         }
+    },
+    setLicense: function(license) {
+        exec(null, null, 'Expansion', 'setLicense', [license]);
+    },
+    setPatchVersion: function(version) {
+        exec(null, null, 'Expansion', 'setPatchVersion', [version]);
+    },
+    setPrimaryVersion: function(version) {
+        exec(null, null, 'Expansion', 'setPrimaryVersion', [version]);
     }
 };
