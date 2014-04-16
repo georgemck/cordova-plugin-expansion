@@ -25,24 +25,29 @@ import android.util.Log;
 
 public class Expansion extends CordovaPlugin implements OnPreparedListener {
 	private final static String EXPANSION_PATH = "/Android/obb/";
-	private final static int MAIN_VERSION = 3;
-	private final static int PATCH_VERSION = 3;
+	private static int MAIN_VERSION = 1;
+	private static int PATCH_VERSION = 1;
 	private static MediaPlayer media;
 	private static ZipResourceFile expansionFile;
 
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
-		try {
-			expansionFile = APKExpansionSupport
-					.getAPKExpansionZipFile(cordova.getActivity().getApplicationContext(), MAIN_VERSION, PATCH_VERSION);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
-
+	
 	public boolean execute(String action, JSONArray args,
 			CallbackContext callbackContext) throws JSONException {
 		Context ctx = cordova.getActivity().getApplicationContext();
+		if (action.equals("load")) {
+			MAIN_VERSION = Integer.parseInt(args.getString(0));
+			PATCH_VERSION = Integer.parseInt(args.getString(1));
+			try {
+				expansionFile = APKExpansionSupport
+						.getAPKExpansionZipFile(cordova.getActivity().getApplicationContext(), MAIN_VERSION, PATCH_VERSION);
+				Log.i("EXPANSION", expansionFile.toString());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		if (action.equals("getFile")) {
 			final String filename = args.getString(0);
 			try {
@@ -59,8 +64,8 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 			}
 			return true;
 		}
-		if (action.equals("getExpansionPaths")) {
-			String[] results = getExpansionFiles(ctx, MAIN_VERSION,
+		if (action.equals("getPaths")) {
+			String[] results = getPaths(ctx, MAIN_VERSION,
 					PATCH_VERSION);
 			if (results != null) {
 				callbackContext.success(results.toString());
@@ -92,8 +97,8 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 		}
 		return false;
 	}
-
-	static String[] getExpansionFiles(Context ctx, int mainVersion,
+	
+	static String[] getPaths(Context ctx, int mainVersion,
 			int patchVersion) {
 		String packageName = ctx.getPackageName();
 		Vector<String> ret = new Vector<String>();
@@ -140,7 +145,7 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 		file.close();
 		return data;
 	}
-
+	
 	static boolean isPlaying() {
 		if (media != null && media.isPlaying())
 			return true;

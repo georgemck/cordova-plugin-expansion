@@ -1,11 +1,14 @@
 var exec = require('cordova/exec');
 
 module.exports = {
-    getExpansionPaths: function(callback) {
-        exec(callback, null, 'Expansion', 'getExpansionPaths', []);
+    getPaths: function(callback) {
+        exec(callback, null, 'Expansion', 'getPaths', []);
     },
     getFile: function(filename, callback) {
         exec(callback, null, 'Expansion', 'getFile', [filename]);
+    },
+    load: function(mainVersion, patchVersion, callback) {
+        exec(callback, null, 'Expansion', 'load', [mainVersion, patchVersion]);
     },
     media: {
         isPlaying: function(callback) {
@@ -20,14 +23,5 @@ module.exports = {
         stop: function() {
             exec(null, null, 'Expansion', 'stopMedia', []);
         }
-    },
-    setLicense: function(license) {
-        exec(null, null, 'Expansion', 'setLicense', [license]);
-    },
-    setPatchVersion: function(version) {
-        exec(null, null, 'Expansion', 'setPatchVersion', [version]);
-    },
-    setPrimaryVersion: function(version) {
-        exec(null, null, 'Expansion', 'setPrimaryVersion', [version]);
     }
 };
