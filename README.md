@@ -1,3 +1,3 @@
-# Cordova Plugin: Expansion File
+# Cordova Plugin: Expansion
 
 **Android Only**
