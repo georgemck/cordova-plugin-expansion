@@ -7,8 +7,8 @@ module.exports = {
     getFile: function(filename, callback) {
         exec(callback, null, 'Expansion', 'getFile', [filename]);
     },
-    load: function(mainVersion, patchVersion, callback) {
-        exec(callback, null, 'Expansion', 'load', [mainVersion, patchVersion]);
+    load: function(mainVersion, patchVersion) {
+        exec(null, null, 'Expansion', 'load', [mainVersion, patchVersion]);
     },
     media: {
         isPlaying: function(callback) {
