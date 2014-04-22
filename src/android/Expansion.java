@@ -25,20 +25,13 @@ import android.util.Log;
 
 public class Expansion extends CordovaPlugin implements OnPreparedListener {
 	private final static String EXPANSION_PATH = "/Android/obb/";
-	private static int MAIN_VERSION = 3;
-	private static int PATCH_VERSION = 3;
+	private static int MAIN_VERSION = 1;
+	private static int PATCH_VERSION = 1;
 	private static MediaPlayer media;
 	private static ZipResourceFile expansionFile;
 
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
-		try {
-			expansionFile = APKExpansionSupport.getAPKExpansionZipFile(cordova
-					.getActivity().getApplicationContext(), MAIN_VERSION,
-					PATCH_VERSION);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public boolean execute(String action, JSONArray args,
@@ -47,7 +40,7 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 		if (action.equals("getFile")) {
 			final String filename = args.getString(0);
 			try {
-				byte[] data = getFile(filename);
+				byte[] data = this.getFile(filename);
 				if (data == null) {
 					callbackContext.success(0);
 				} else {
@@ -61,7 +54,7 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 			return true;
 		}
 		if (action.equals("getPaths")) {
-			String[] results = getPaths(ctx, MAIN_VERSION, PATCH_VERSION);
+			String[] results = this.getPaths(ctx, MAIN_VERSION, PATCH_VERSION);
 			if (results != null) {
 				callbackContext.success(results.toString());
 			} else {
@@ -69,31 +62,37 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 			}
 			return true;
 		}
+		if (action.equals("load")) {
+			MAIN_VERSION = Integer.parseInt(args.getString(0), 10);
+			PATCH_VERSION = Integer.parseInt(args.getString(0), 10);
+			this.loadExpansion(MAIN_VERSION, PATCH_VERSION);
+			return true;
+		}
 		if (action.equals("isPlaying")) {
-			callbackContext.success(isPlaying() ? 1 : 0);
+			callbackContext.success(this.isPlaying() ? 1 : 0);
 			return true;
 		}
 		if (action.equals("pauseMedia")) {
-			pauseMedia();
+			this.pauseMedia();
 			return true;
 		}
 		if (action.equals("playMedia")) {
 			final String filename = args.getString(0);
 			try {
-				playMedia(filename);
+				this.playMedia(filename);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			return true;
 		}
 		if (action.equals("stopMedia")) {
-			stopMedia();
+			this.stopMedia();
 			return true;
 		}
 		return false;
 	}
 
-	static String[] getPaths(Context ctx, int mainVersion, int patchVersion) {
+	public String[] getPaths(Context ctx, int mainVersion, int patchVersion) {
 		String packageName = ctx.getPackageName();
 		Vector<String> ret = new Vector<String>();
 		if (Environment.getExternalStorageState().equals(
@@ -125,7 +124,7 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 		return retArray;
 	}
 
-	static byte[] getFile(String filename) throws IOException {
+	public byte[] getFile(String filename) throws IOException {
 		if (expansionFile == null) {
 			Log.e("EXPANSION", "Expansion file not found!");
 			return null;
@@ -140,10 +139,23 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 		return data;
 	}
 
-	static boolean isPlaying() {
+	public boolean isPlaying() {
 		if (media != null && media.isPlaying())
 			return true;
 		return false;
+	}
+
+	public void loadExpansion(int mainVersion, int patchVersion) {
+		try {
+			Log.e("EXPANSION", "MAIN_VERSION: " + mainVersion
+					+ " PATCH_VERSION: " + patchVersion);
+			expansionFile = APKExpansionSupport.getAPKExpansionZipFile(
+					this.cordova.getActivity().getApplicationContext(),
+					mainVersion, patchVersion);
+		} catch (IOException e) {
+			Log.e("EXPANSION", "Unable to load expansion files.");
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -151,13 +163,13 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 		media.start();
 	}
 
-	static void pauseMedia() {
+	public void pauseMedia() {
 		if (media != null && media.isPlaying())
 			media.pause();
 	}
 
-	private void playMedia(String filename) throws IOException {
-		if (media != null && media.isPlaying()) {
+	public void playMedia(String filename) throws IOException {
+		if (this.isPlaying()) {
 			Log.e("EXPANSION", "Media is currently playing!");
 		}
 		if (expansionFile == null) {
@@ -175,7 +187,7 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 		media.prepareAsync();
 	}
 
-	static void stopMedia() {
+	public void stopMedia() {
 		if (media != null && media.isPlaying())
 			media.stop();
 	}
