@@ -1,4 +1,4 @@
-package com.jernung.cordova.expansionfile;
+package com.jernung.cordova.expansion;
 
 import com.google.android.vending.expansion.downloader.DownloaderClientMarshaller;
 

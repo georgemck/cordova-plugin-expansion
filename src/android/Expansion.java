@@ -1,4 +1,4 @@
-package com.jernung.cordova.expansionfile;
+package com.jernung.cordova.expansion;
 
 import java.io.File;
 import java.io.IOException;
