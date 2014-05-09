@@ -169,7 +169,7 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 	}
 
 	public void playMedia(String filename) throws IOException {
-		if (this.isPlaying()) {
+		if (!this.isPlaying()) {
 			Log.e("EXPANSION", "Media is currently playing!");
 		}
 		if (expansionFile == null) {
@@ -180,6 +180,10 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 		if (file == null) {
 			Log.e("EXPANSION", "Filename '" + filename + "' not found!");
 		}
+		if (media != null) {
+			media.stop();
+			media.release();
+		}
 		media = new MediaPlayer();
 		media.setDataSource(file.getFileDescriptor(), file.getStartOffset(),
 				file.getLength());
@@ -188,8 +192,10 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 	}
 
 	public void stopMedia() {
-		if (media != null && media.isPlaying())
+		if (media != null && media.isPlaying()) {
+			media.release();
 			media.stop();
+		}
 	}
 
 }
