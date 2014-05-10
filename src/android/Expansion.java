@@ -27,11 +27,12 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 	private final static String EXPANSION_PATH = "/Android/obb/";
 	private static int MAIN_VERSION = 1;
 	private static int PATCH_VERSION = 1;
-	private static MediaPlayer media;
-	private static ZipResourceFile expansionFile;
+	private MediaPlayer media;
+	private ZipResourceFile expansionFile;
 
 	public void initialize(CordovaInterface cordova, CordovaWebView webView) {
 		super.initialize(cordova, webView);
+		media = new MediaPlayer();
 	}
 
 	public boolean execute(String action, JSONArray args,
@@ -164,27 +165,27 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 	}
 
 	public void pauseMedia() {
-		if (media != null && media.isPlaying())
+		if (media != null && media.isPlaying()) {
 			media.pause();
+		}
 	}
 
 	public void playMedia(String filename) throws IOException {
-		if (!this.isPlaying()) {
-			Log.e("EXPANSION", "Media is currently playing!");
-		}
 		if (expansionFile == null) {
 			Log.e("EXPANSION", "Expansion file not found!");
+			return;
 		}
 		AssetFileDescriptor file = expansionFile
 				.getAssetFileDescriptor(filename);
 		if (file == null) {
 			Log.e("EXPANSION", "Filename '" + filename + "' not found!");
+			return;
 		}
-		if (media != null) {
-			media.stop();
-			media.release();
+		if (this.isPlaying()) {
+			Log.e("EXPANSION", "Media is currently playing!");
+			this.stopMedia();
 		}
-		media = new MediaPlayer();
+		media.reset();
 		media.setDataSource(file.getFileDescriptor(), file.getStartOffset(),
 				file.getLength());
 		media.setOnPreparedListener(this);
@@ -193,7 +194,6 @@ public class Expansion extends CordovaPlugin implements OnPreparedListener {
 
 	public void stopMedia() {
 		if (media != null && media.isPlaying()) {
-			media.release();
 			media.stop();
 		}
 	}

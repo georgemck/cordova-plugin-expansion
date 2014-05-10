@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="com.jernung.cordova.expansion"
-        version="0.0.47">
+        version="0.0.48">
     
     <name>Expansion File</name>
 
