@@ -23,7 +23,7 @@ import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 
-public class Expansion extends CordovaPlugin implements OnPreparedListener {
+public class ExpansionPlugin extends CordovaPlugin implements OnPreparedListener {
 	private final static String EXPANSION_PATH = "/Android/obb/";
 	private static int MAIN_VERSION = 1;
 	private static int PATCH_VERSION = 1;
