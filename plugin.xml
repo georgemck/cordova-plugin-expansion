@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="com.jernung.cordova.expansion"
-        version="0.0.49">
+        version="0.0.50">
     
     <name>Expansion File</name>
 
@@ -39,7 +39,7 @@
             <receiver android:name=".ExpansionAlarmReceiver" />
         </config-file>
         
-        <source-file src="src/android/Expansion.java" target-dir="src/com/jernung/cordova/expansion" />
+        <source-file src="src/android/ExpansionPlugin.java" target-dir="src/com/jernung/cordova/expansion" />
         <source-file src="src/android/ExpansionAlarmReceiver.java" target-dir="src/com/jernung/cordova/expansion" />
         <source-file src="src/android/ExpansionDownloaderService.java" target-dir="src/com/jernung/cordova/expansion" />
         <source-file src="src/android/libs/commons-io-2.4.jar" target-dir="libs/" />
