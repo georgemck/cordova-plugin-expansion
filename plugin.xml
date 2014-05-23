@@ -2,7 +2,7 @@
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
         xmlns:android="http://schemas.android.com/apk/res/android"
         id="com.jernung.cordova.expansion"
-        version="0.0.52">
+        version="0.0.53">
     
     <name>Expansion File</name>
 
@@ -10,15 +10,15 @@
     <description>Cordova Expansion Plugin</description>
     <keywords>cordova,expansion,media</keywords>
     
-    <js-module src="www/expansion.js" name="Expansion">
+    <js-module src="www/expansion.js" name="ExpansionPlugin">
         <clobbers target="navigator.expansion" />
     </js-module>
     
     <!-- android -->
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="Expansion" >
-                <param name="android-package" value="com.jernung.cordova.expansion.Expansion"/>
+            <feature name="ExpansionPlugin" >
+                <param name="android-package" value="com.jernung.cordova.expansion.ExpansionPlugin"/>
             </feature>
         </config-file>
         
@@ -39,13 +39,13 @@
             <receiver android:name=".ExpansionAlarmReceiver" />
         </config-file>
         
-        <source-file src="src/android/Expansion.java" target-dir="src/com/jernung/cordova/expansion" />
+        <source-file src="src/android/ExpansionPlugin.java" target-dir="src/com/jernung/cordova/expansion" />
         <source-file src="src/android/ExpansionAlarmReceiver.java" target-dir="src/com/jernung/cordova/expansion" />
         <source-file src="src/android/ExpansionDownloaderService.java" target-dir="src/com/jernung/cordova/expansion" />
-        <source-file src="src/android/libs/commons-io-2.4.jar" target-dir="libs/" />
-        <source-file src="src/android/libs/downloader_library.jar" target-dir="libs/" />
-        <source-file src="src/android/libs/licensing_library.jar" target-dir="libs/" />
-        <source-file src="src/android/libs/zip_library.jar" target-dir="libs/" />
+        <source-file src="src/android/libs/commons-io-2.4.jar" target-dir="libs" />
+        <source-file src="src/android/libs/downloader_library.jar" target-dir="libs" />
+        <source-file src="src/android/libs/licensing_library.jar" target-dir="libs" />
+        <source-file src="src/android/libs/zip_library.jar" target-dir="libs" />
     </platform>
         
 </plugin>
